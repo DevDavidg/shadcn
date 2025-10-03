@@ -10,24 +10,31 @@ import '@/styles/globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Next SSR Starter',
-  description: 'Ultra lightweight frontend architecture with React + Next.js',
-  keywords: ['Next.js', 'React', 'SSR', 'TypeScript', 'Tailwind CSS'],
-  authors: [{ name: 'Your Name' }],
-  creator: 'Your Name',
+  title: 'ChromaDev',
+  description: 'Multi-tenant theme management system with React + Next.js',
+  keywords: [
+    'Next.js',
+    'React',
+    'Themes',
+    'Multi-tenant',
+    'TypeScript',
+    'Tailwind CSS'
+  ],
+  authors: [{ name: 'ChromaDev Team' }],
+  creator: 'ChromaDev Team',
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://your-domain.com',
-    title: 'Next SSR Starter',
-    description: 'Ultra lightweight frontend architecture with React + Next.js',
-    siteName: 'Next SSR Starter'
+    url: 'https://chromadev.com',
+    title: 'ChromaDev',
+    description: 'Multi-tenant theme management system with React + Next.js',
+    siteName: 'ChromaDev'
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Next SSR Starter',
-    description: 'Ultra lightweight frontend architecture with React + Next.js',
-    creator: '@yourusername'
+    title: 'ChromaDev',
+    description: 'Multi-tenant theme management system with React + Next.js',
+    creator: '@chromadev'
   },
   robots: {
     index: true,

@@ -1,6 +1,6 @@
-# Next SSR Starter
+# ChromaDev
 
-**Ultra lightweight frontend architecture** con React + Next.js, optimizada para SSR/ISR híbrido, performance y buenas prácticas modernas.
+**Sistema de gestión de temas multi-tenant** con React + Next.js, optimizado para crear y gestionar temas personalizados por dominio.
 
 ## 🚀 Características destacadas
 
@@ -29,8 +29,8 @@
 
 ```bash
 # Clonar
-git clone https://github.com/tu-usuario/next-ssr-starter.git
-cd next-ssr-starter/web
+git clone https://github.com/tu-usuario/chromadev.git
+cd chromadev/web
 
 # Instalar dependencias
 npm install

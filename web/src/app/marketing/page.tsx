@@ -10,9 +10,9 @@ import {
 } from '@/components/ui/card'
 
 export const metadata: Metadata = {
-  title: 'Marketing - Next SSR Starter',
+  title: 'Marketing - ChromaDev',
   description:
-    'Marketing page showcasing the features and benefits of Next SSR Starter'
+    'Marketing page showcasing the features and benefits of ChromaDev'
 }
 
 export default function MarketingPage() {
@@ -21,10 +21,10 @@ export default function MarketingPage() {
       <div className="container mx-auto px-4 py-16">
         <div className="mb-16 text-center">
           <h1 className="mb-6 text-4xl font-bold text-gray-900 dark:text-white">
-            Why Choose Next SSR Starter?
+            Why Choose ChromaDev?
           </h1>
           <p className="mx-auto max-w-2xl text-lg text-gray-600 dark:text-gray-300">
-            {'A production-ready foundation for modern web applications with all the tools you need to build fast, scalable, and maintainable applications.'.slice(
+            {'A powerful multi-tenant theme management system that allows you to create, customize, and manage themes for different domains with ease.'.slice(
               0,
               150
             )}

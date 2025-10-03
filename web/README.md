@@ -1,6 +1,6 @@
-# Next SSR Starter
+# ChromaDev
 
-Ultra lightweight frontend architecture with React + Next.js, optimized for SSR/ISR hybrid, performance and modern best practices.
+Multi-tenant theme management system with React + Next.js, optimized for creating and managing custom themes per domain.
 
 ## Features
 
