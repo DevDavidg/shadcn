@@ -1,10 +1,51 @@
-import { drizzle } from 'drizzle-orm/better-sqlite3'
-import Database from 'better-sqlite3'
+import mongoose from 'mongoose'
 import { env } from './env'
-import * as schema from './schema'
 
-const sqlite = new Database(env.SQLITE_DATABASE_PATH)
-sqlite.pragma('journal_mode = WAL')
-const db = drizzle(sqlite, { schema })
+const MONGODB_URI = env.MONGODB_URI || 'mongodb://localhost:27017/chroma-dev'
 
-export { db }
+if (!env.MONGODB_URI && env.NODE_ENV === 'production') {
+  throw new Error('MONGODB_URI is required in production')
+}
+
+type MongooseCache = {
+  conn: typeof mongoose | null
+  promise: Promise<typeof mongoose> | null
+}
+
+let cached: MongooseCache = global.mongooseCache
+
+if (!cached) {
+  cached = global.mongooseCache = { conn: null, promise: null }
+}
+
+async function connectDB() {
+  if (cached.conn) {
+    return cached.conn
+  }
+
+  if (!cached.promise) {
+    const opts = {
+      bufferCommands: false
+    }
+
+    cached.promise = mongoose.connect(MONGODB_URI, opts) as Promise<
+      typeof mongoose
+    >
+  }
+
+  try {
+    cached.conn = await cached.promise
+  } catch (e) {
+    cached.promise = null
+    throw e
+  }
+
+  return cached.conn
+}
+
+export default connectDB
+
+declare global {
+  // eslint-disable-next-line no-var, no-unused-vars
+  var mongooseCache: MongooseCache
+}

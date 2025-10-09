@@ -2,6 +2,7 @@
 
 import React, { useState, useCallback, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
+import { Loader2 } from 'lucide-react'
 import { CodeEditor } from '@/components/core/code-editor'
 import { ErrorDisplay } from '@/components/core/error-display'
 import { Button } from '@/components/ui/button'
@@ -16,6 +17,7 @@ export default function ThemeEditor() {
   const [code, setCode] = useState<string>(DEFAULT_THEME)
   const [errors, setErrors] = useState<LintError[]>([])
   const [isRunning, setIsRunning] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
 
   const validateCode = useCallback((codeText: string): LintError[] => {
     return validateThemeCode(codeText)
@@ -27,16 +29,29 @@ export default function ThemeEditor() {
     [validateCode]
   )
 
-  const formatCode = useCallback(() => {
+  const formatCode = useCallback(async () => {
+    setIsSaving(true)
     try {
+      await new Promise((resolve) => setTimeout(resolve, 100))
       const parsed = JSON.parse(code)
       const formatted = JSON.stringify(parsed, null, 2)
       setCode(formatted)
       setErrors(validateThemeCode(formatted))
+      toast({
+        title: 'Saved',
+        description: 'Theme configuration formatted successfully.'
+      })
     } catch {
       setErrors(validateCode(code))
+      toast({
+        title: 'Error',
+        description: 'Invalid JSON format.',
+        variant: 'destructive'
+      })
+    } finally {
+      setIsSaving(false)
     }
-  }, [code, validateCode])
+  }, [code, validateCode, toast])
 
   const handleCodeChange = (v: string) => {
     setCode(v)
@@ -155,6 +170,7 @@ export default function ThemeEditor() {
           <Button
             variant="outline"
             size="sm"
+            disabled={isSaving}
             style={{
               backgroundColor: ONE_DARK.panelBg,
               color: ONE_DARK.text,
@@ -162,7 +178,14 @@ export default function ThemeEditor() {
             }}
             onClick={formatCode}
           >
-            Save
+            {isSaving ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              'Save'
+            )}
           </Button>
           <Button
             size="sm"
@@ -174,7 +197,14 @@ export default function ThemeEditor() {
             }}
             onClick={handleRun}
           >
-            {isRunning ? 'Creating...' : 'Run'}
+            {isRunning ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Creating...
+              </>
+            ) : (
+              'Run'
+            )}
           </Button>
         </div>
       </div>

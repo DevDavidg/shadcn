@@ -1,82 +1,86 @@
-import { eq } from 'drizzle-orm'
-import { db } from './db'
+import connectDB from './db'
 import {
-  tenants,
-  tenantThemes,
-  type Tenant,
+  Tenant,
+  TenantTheme,
+  type TenantDocument,
+  type TenantThemeDocument,
   type NewTenant,
-  type TenantTheme,
   type NewTenantTheme
-} from './schema'
+} from './schema-mongo'
 
-export async function createTenant(data: NewTenant) {
-  const [tenant] = await db.insert(tenants).values(data).returning()
-  return tenant
+export type {
+  TenantDocument as Tenant,
+  NewTenant,
+  TenantThemeDocument as TenantTheme,
+  NewTenantTheme
 }
 
-export async function getTenant(domain: string): Promise<Tenant | null> {
-  const [tenant] = await db
-    .select()
-    .from(tenants)
-    .where(eq(tenants.domain, domain))
-    .limit(1)
-  return tenant || null
+export async function createTenant(data: NewTenant): Promise<TenantDocument> {
+  await connectDB()
+  const tenant = await Tenant.create(data)
+  return tenant.toObject() as TenantDocument
 }
 
-export async function getAllTenants(): Promise<Tenant[]> {
-  return await db.select().from(tenants)
+export async function getTenant(
+  domain: string
+): Promise<TenantDocument | null> {
+  await connectDB()
+  const tenant = await Tenant.findOne({ domain }).lean()
+  return tenant as TenantDocument | null
 }
 
-export async function updateTenant(domain: string, data: Partial<NewTenant>) {
-  const [tenant] = await db
-    .update(tenants)
-    .set({ ...data, updatedAt: new Date().toISOString() })
-    .where(eq(tenants.domain, domain))
-    .returning()
-  return tenant
+export async function getAllTenants(): Promise<TenantDocument[]> {
+  await connectDB()
+  const tenants = await Tenant.find().lean()
+  return tenants as unknown as TenantDocument[]
 }
 
-export async function deleteTenant(domain: string) {
-  await db.delete(tenantThemes).where(eq(tenantThemes.tenantDomain, domain))
-  await db.delete(tenants).where(eq(tenants.domain, domain))
+export async function updateTenant(
+  domain: string,
+  data: Partial<NewTenant>
+): Promise<TenantDocument | null> {
+  await connectDB()
+  const tenant = await Tenant.findOneAndUpdate(
+    { domain },
+    { $set: data },
+    { new: true }
+  ).lean()
+  return tenant as TenantDocument | null
 }
 
-export async function saveTenantTheme(data: NewTenantTheme) {
-  const existing = await getTenantTheme(data.tenantDomain)
+export async function deleteTenant(domain: string): Promise<void> {
+  await connectDB()
+  await TenantTheme.deleteOne({ tenantDomain: domain })
+  await Tenant.deleteOne({ domain })
+}
 
-  const themeData = {
-    ...data,
-    config:
-      typeof data.config === 'string'
-        ? data.config
-        : JSON.stringify(data.config),
-    updatedAt: new Date().toISOString()
-  }
+export async function saveTenantTheme(
+  data: NewTenantTheme
+): Promise<TenantThemeDocument> {
+  await connectDB()
 
-  if (existing) {
-    const [theme] = await db
-      .update(tenantThemes)
-      .set(themeData)
-      .where(eq(tenantThemes.tenantDomain, data.tenantDomain))
-      .returning()
-    return theme
-  } else {
-    const [theme] = await db.insert(tenantThemes).values(themeData).returning()
-    return theme
-  }
+  const config =
+    typeof data.config === 'string' ? data.config : JSON.stringify(data.config)
+
+  const theme = await TenantTheme.findOneAndUpdate(
+    { tenantDomain: data.tenantDomain },
+    { $set: { tenantDomain: data.tenantDomain, config } },
+    { upsert: true, new: true }
+  ).lean()
+
+  return theme as unknown as TenantThemeDocument
 }
 
 export async function getTenantTheme(
   domain: string
-): Promise<TenantTheme | null> {
-  const [theme] = await db
-    .select()
-    .from(tenantThemes)
-    .where(eq(tenantThemes.tenantDomain, domain))
-    .limit(1)
-  return theme || null
+): Promise<TenantThemeDocument | null> {
+  await connectDB()
+  const theme = await TenantTheme.findOne({ tenantDomain: domain }).lean()
+  return theme as TenantThemeDocument | null
 }
 
-export async function getAllTenantThemes(): Promise<TenantTheme[]> {
-  return await db.select().from(tenantThemes)
+export async function getAllTenantThemes(): Promise<TenantThemeDocument[]> {
+  await connectDB()
+  const themes = await TenantTheme.find().lean()
+  return themes as unknown as TenantThemeDocument[]
 }

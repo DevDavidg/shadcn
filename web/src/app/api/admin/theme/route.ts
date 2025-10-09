@@ -1,7 +1,15 @@
-import { kv } from '@vercel/kv'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { createTenant, saveTenantTheme } from '@/lib/tenant-service'
+
+let kv: any = null
+try {
+  if (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) {
+    kv = require('@vercel/kv').kv
+  }
+} catch (error) {
+  console.warn('KV not available:', error instanceof Error ? error.message : 'Unknown error')
+}
 
 const ThemeConfigSchema = z.object({
   colors: z.object({
@@ -72,11 +80,12 @@ export async function POST(request: NextRequest) {
       config: JSON.stringify(validatedConfig)
     })
 
-    // Also save to KV if available (for production)
-    try {
-      await kv.set(`tenant-config:${domain}`, JSON.stringify(validatedConfig))
-    } catch (kvError) {
-      console.warn('KV not available, using database only:', kvError)
+    if (kv) {
+      try {
+        await kv.set(`tenant-config:${domain}`, JSON.stringify(validatedConfig))
+      } catch (kvError) {
+        console.warn('KV not available, using database only:', kvError)
+      }
     }
 
     return NextResponse.json({ success: true })
@@ -104,7 +113,9 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'Domain required' }, { status: 400 })
     }
 
-    await kv.del(`tenant-config:${domain}`)
+    if (kv) {
+      await kv.del(`tenant-config:${domain}`)
+    }
 
     return NextResponse.json({ success: true })
   } catch (error) {

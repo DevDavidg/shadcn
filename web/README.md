@@ -17,6 +17,7 @@ Multi-tenant theme management system with React + Next.js, optimized for creatin
 ## Tech Stack
 
 - Next.js 15 (with React 19)
+- MongoDB + Mongoose
 - shadcn/ui + Tailwind CSS
 - Zod
 - TanStack Query
@@ -31,6 +32,10 @@ Multi-tenant theme management system with React + Next.js, optimized for creatin
 # Install dependencies
 npm install
 
+# Setup database (MongoDB)
+# For local: Start MongoDB (brew services start mongodb-community)
+# No migrations needed - MongoDB creates schema automatically
+
 # Development
 npm run dev
 
@@ -42,6 +47,15 @@ npm run start
 npm run test
 npm run test:e2e
 ```
+
+## Production Deployment
+
+For production deployment on Vercel with MongoDB Atlas, see [MONGODB_SETUP.md](./MONGODB_SETUP.md) for:
+
+- Local MongoDB installation
+- MongoDB Atlas configuration
+- Environment variables setup
+- Troubleshooting common issues
 
 ## Project Structure
 
