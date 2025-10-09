@@ -10,8 +10,8 @@ import '@/styles/globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'ChromaDev',
-  description: 'Multi-tenant theme management system with React + Next.js',
+  title: 'Platform',
+  description: 'Multi-tenant theme management platform',
   keywords: [
     'Next.js',
     'React',
@@ -20,22 +20,6 @@ export const metadata: Metadata = {
     'TypeScript',
     'Tailwind CSS'
   ],
-  authors: [{ name: 'ChromaDev Team' }],
-  creator: 'ChromaDev Team',
-  openGraph: {
-    type: 'website',
-    locale: 'en_US',
-    url: 'https://chromadev.com',
-    title: 'ChromaDev',
-    description: 'Multi-tenant theme management system with React + Next.js',
-    siteName: 'ChromaDev'
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'ChromaDev',
-    description: 'Multi-tenant theme management system with React + Next.js',
-    creator: '@chromadev'
-  },
   robots: {
     index: true,
     follow: true,

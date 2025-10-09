@@ -76,7 +76,7 @@ export default function ThemeEditor() {
 
     try {
       const themeConfig = JSON.parse(code)
-      const domain = `tenant-${Date.now()}.localhost:3000`
+      const domain = `tenant-${Date.now()}`
 
       const response = await fetch('/api/admin/theme', {
         method: 'POST',
@@ -95,10 +95,10 @@ export default function ThemeEditor() {
 
       toast({
         title: 'Tenant Created',
-        description: `Theme applied to ${domain}`
+        description: `Theme applied successfully`
       })
 
-      router.push(`/dashboard?tenant=${encodeURIComponent(domain)}`)
+      router.push(`/dashboard?tenant=${domain}`)
     } catch (error) {
       console.error('Failed to create tenant:', error)
       toast({

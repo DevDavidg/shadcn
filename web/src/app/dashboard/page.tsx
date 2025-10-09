@@ -343,34 +343,40 @@ export default async function DashboardPage({
 
         <div className="dashboard-grid grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
           {tenantConfig && (
-            <Card className="tenant-config-card border-primary/20 bg-primary/5 transition-all duration-300 hover:shadow-lg hover:scale-105">
+            <Card className="tenant-config-card border-primary/20 bg-primary/5 transition-all duration-300 hover:scale-105 hover:shadow-lg">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 metric-label">
+                <CardTitle className="metric-label flex items-center gap-2">
                   <div className="h-2 w-2 rounded-full bg-primary"></div>
                   {tenantConfig.branding?.name || 'White Label'} Configuration
                 </CardTitle>
                 <CardDescription className="metric-change">
-                  Active theme configuration for {tenantDomain}
+                  Active theme configuration
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {tenantConfig.branding && (
                     <div className="rounded-lg border bg-background p-4 transition-all duration-300 hover:shadow-md">
-                      <h4 className="mb-2 font-medium metric-label">Brand Identity</h4>
+                      <h4 className="metric-label mb-2 font-medium">
+                        Brand Identity
+                      </h4>
                       <div className="space-y-2">
                         {tenantConfig.branding.name && (
                           <div className="flex items-center gap-2">
-                            <span className="text-sm font-medium metric-change">Brand:</span>
-                            <span className="text-sm font-semibold text-primary metric-value">
+                            <span className="metric-change text-sm font-medium">
+                              Brand:
+                            </span>
+                            <span className="metric-value text-sm font-semibold text-primary">
                               {tenantConfig.branding.name}
                             </span>
                           </div>
                         )}
                         {tenantConfig.branding.logo && (
                           <div className="flex items-center gap-2">
-                            <span className="text-sm font-medium metric-change">Logo:</span>
-                            <span className="text-xs text-muted-foreground metric-change">
+                            <span className="metric-change text-sm font-medium">
+                              Logo:
+                            </span>
+                            <span className="metric-change text-xs text-muted-foreground">
                               {tenantConfig.branding.logo}
                             </span>
                           </div>
@@ -379,19 +385,23 @@ export default async function DashboardPage({
                     </div>
                   )}
                   <div className="rounded-lg border bg-background p-4 transition-all duration-300 hover:shadow-md">
-                    <h4 className="mb-2 font-medium metric-label">Color Palette</h4>
+                    <h4 className="metric-label mb-2 font-medium">
+                      Color Palette
+                    </h4>
                     <div className="color-palette-grid grid grid-cols-1 gap-2 sm:grid-cols-2">
                       {Object.entries(tenantConfig.colors).map(
                         ([key, value]) => (
                           <div
                             key={key}
-                            className="flex items-center space-x-2 p-2 rounded transition-all duration-300 hover:bg-muted/50"
+                            className="flex items-center space-x-2 rounded p-2 transition-all duration-300 hover:bg-muted/50"
                           >
                             <div
                               className="h-4 w-4 rounded border shadow-sm"
                               style={{ backgroundColor: value as string }}
                             />
-                            <span className="text-sm capitalize metric-change">{key}</span>
+                            <span className="metric-change text-sm capitalize">
+                              {key}
+                            </span>
                           </div>
                         )
                       )}
@@ -402,7 +412,7 @@ export default async function DashboardPage({
             </Card>
           )}
 
-          <Card className="activity-card transition-all duration-300 hover:shadow-lg hover:scale-105">
+          <Card className="activity-card transition-all duration-300 hover:scale-105 hover:shadow-lg">
             <CardHeader>
               <CardTitle className="metric-label">Recent Activity</CardTitle>
               <CardDescription className="metric-change">
@@ -421,19 +431,19 @@ export default async function DashboardPage({
                   return (
                     <div
                       key={activity.id}
-                      className="activity-item flex items-center space-x-4 p-3 rounded-lg transition-all duration-300 hover:bg-muted/50"
+                      className="activity-item flex items-center space-x-4 rounded-lg p-3 transition-all duration-300 hover:bg-muted/50"
                     >
                       <div
                         className={`h-2 w-2 rounded-full ${statusColors[activity.status]}`}
                       ></div>
                       <div className="flex-1">
-                        <p className="text-sm font-medium metric-label">
+                        <p className="metric-label text-sm font-medium">
                           {activity.message}
                         </p>
-                        <p className="text-xs text-muted-foreground metric-change">
+                        <p className="metric-change text-xs text-muted-foreground">
                           {formatRelativeTime(activity.timestamp)}
                         </p>
-                        <p className="text-xs text-muted-foreground opacity-60 metric-change">
+                        <p className="metric-change text-xs text-muted-foreground opacity-60">
                           ID: {slugify(activity.type)}
                         </p>
                       </div>
@@ -444,29 +454,53 @@ export default async function DashboardPage({
             </CardContent>
           </Card>
 
-          <Card className="actions-card transition-all duration-300 hover:shadow-lg hover:scale-105">
+          <Card className="actions-card transition-all duration-300 hover:scale-105 hover:shadow-lg">
             <CardHeader>
               <CardTitle className="metric-label">Quick Actions</CardTitle>
-              <CardDescription className="metric-change">Common tasks and shortcuts</CardDescription>
+              <CardDescription className="metric-change">
+                {tenantConfig?.branding?.name
+                  ? `${tenantConfig.branding.name} shortcuts and tasks`
+                  : 'Common tasks and shortcuts'}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
                 <ThemeEditorButton />
-                <Button className="action-button w-full justify-start transition-all duration-300 hover:scale-105" variant="outline">
+                <Button
+                  className="action-button w-full justify-start transition-all duration-300 hover:scale-105"
+                  variant="outline"
+                >
                   <Plus className="mr-2 h-4 w-4" />
-                  Create New Project
+                  {tenantConfig?.branding?.name
+                    ? `Create ${tenantConfig.branding.name} Project`
+                    : 'Create New Project'}
                 </Button>
-                <Button className="action-button w-full justify-start transition-all duration-300 hover:scale-105" variant="outline">
+                <Button
+                  className="action-button w-full justify-start transition-all duration-300 hover:scale-105"
+                  variant="outline"
+                >
                   <BarChart3 className="mr-2 h-4 w-4" />
-                  View Analytics
+                  {tenantConfig?.branding?.name
+                    ? `${tenantConfig.branding.name} Analytics`
+                    : 'View Analytics'}
                 </Button>
-                <Button className="action-button w-full justify-start transition-all duration-300 hover:scale-105" variant="outline">
+                <Button
+                  className="action-button w-full justify-start transition-all duration-300 hover:scale-105"
+                  variant="outline"
+                >
                   <UserCog className="mr-2 h-4 w-4" />
-                  Manage Users
+                  {tenantConfig?.branding?.name
+                    ? `Manage ${tenantConfig.branding.name} Users`
+                    : 'Manage Users'}
                 </Button>
-                <Button className="action-button w-full justify-start transition-all duration-300 hover:scale-105" variant="outline">
+                <Button
+                  className="action-button w-full justify-start transition-all duration-300 hover:scale-105"
+                  variant="outline"
+                >
                   <Download className="mr-2 h-4 w-4" />
-                  Export Data
+                  {tenantConfig?.branding?.name
+                    ? `Export ${tenantConfig.branding.name} Data`
+                    : 'Export Data'}
                 </Button>
               </div>
             </CardContent>
