@@ -29,31 +29,6 @@ export async function getTenant(
   return tenant as TenantDocument | null
 }
 
-export async function getAllTenants(): Promise<TenantDocument[]> {
-  await connectDB()
-  const tenants = await Tenant.find().lean()
-  return tenants as unknown as TenantDocument[]
-}
-
-export async function updateTenant(
-  domain: string,
-  data: Partial<NewTenant>
-): Promise<TenantDocument | null> {
-  await connectDB()
-  const tenant = await Tenant.findOneAndUpdate(
-    { domain },
-    { $set: data },
-    { new: true }
-  ).lean()
-  return tenant as TenantDocument | null
-}
-
-export async function deleteTenant(domain: string): Promise<void> {
-  await connectDB()
-  await TenantTheme.deleteOne({ tenantDomain: domain })
-  await Tenant.deleteOne({ domain })
-}
-
 export async function saveTenantTheme(
   data: NewTenantTheme
 ): Promise<TenantThemeDocument> {
@@ -77,10 +52,4 @@ export async function getTenantTheme(
   await connectDB()
   const theme = await TenantTheme.findOne({ tenantDomain: domain }).lean()
   return theme as TenantThemeDocument | null
-}
-
-export async function getAllTenantThemes(): Promise<TenantThemeDocument[]> {
-  await connectDB()
-  const themes = await TenantTheme.find().lean()
-  return themes as unknown as TenantThemeDocument[]
 }
