@@ -40,6 +40,9 @@ MongoDB will automatically create the database and collections on first use.
 
 ## Production (Vercel with MongoDB Atlas)
 
+> **Security:** Never commit real Atlas credentials. Put the connection string in the `MONGODB_URI` environment variable (e.g. Vercel/Atlas integration or `.env.local`), not in source control.
+
+
 ### 1. Create MongoDB Atlas Database
 
 In your Vercel project:
@@ -61,7 +64,7 @@ Vercel automatically adds `MONGODB_URI` to your environment variables.
 Format:
 
 ```
-mongodb+srv://username:password@cluster.mongodb.net/?retryWrites=true&w=majority
+mongodb+srv://<username>:<password>@<cluster>/<database>?retryWrites=true&w=majority
 ```
 
 ### 3. Deploy
